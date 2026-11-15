@@ -34,7 +34,7 @@ Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "C
 - Your own interactive Claude use counts toward the same limits.
 
 ## Pro pack
-Routine prompt templates, a weekly report generator, a state-file trimmer and run-log linter, a local usage-gate script with on-demand refresh, and a setup guide: https://polar.sh/plainfold
+Routine prompt templates, a weekly report generator, a state-file trimmer and run-log linter, a local usage-gate script with on-demand refresh, and a setup guide. $19 one-time via Polar (merchant of record): https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV
 
 ## License
 MIT. See `LICENSE`. Provided as is, without warranty.
