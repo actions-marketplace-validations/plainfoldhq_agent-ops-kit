@@ -2,6 +2,18 @@
 
 A small, file-based memory and usage-gate setup for Claude Code agents that run on a schedule (for example, cloud routines). The agent keeps its state in plain Markdown/CSV files in a git repo and checks your plan usage before doing any work, so unattended runs back off instead of eating your limits.
 
+Use it if you want to:
+- run Claude Code on a schedule (cloud routines, cron, GitHub Actions) without blowing through your 5-hour or weekly plan limits;
+- read your Claude Code usage (`five_hour` and `seven_day` utilization) from a GitHub Actions job instead of guessing;
+- give an unattended agent a durable memory (state, decisions, ledger) that survives between sessions.
+
+Example `usage.json` written by the workflow:
+
+```json
+{"checked_at": "2026-11-16T08:51:15Z", "five_hour_pct": 10.0, "weekly_pct": 1.0,
+ "weekly_resets": "2026-11-22T19:00:00+00:00", "status": "allowed", "error": null}
+```
+
 Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "Claude Code" are Anthropic's trademarks, used here only to describe what this works with.
 
 ## What's in it
@@ -33,8 +45,21 @@ Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "C
 - This kit only reads usage through the official CLI. Do not call usage endpoints directly with OAuth tokens or browser cookies; that is against Anthropic's consumer terms.
 - Your own interactive Claude use counts toward the same limits.
 
-## Pro pack
-Routine prompt templates, a weekly report generator, a state-file trimmer and run-log linter, a local usage-gate script with on-demand refresh, and a setup guide. $19 one-time via Polar (merchant of record): https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV
+## FAQ
+**Can a cloud session read my plan usage directly?** Not through any supported API we know of. This kit uses the official CLI's `rate_limit_event` inside your own GitHub Actions job instead.
+
+**Does the check cost usage?** One one-line Haiku prompt per check.
+
+**Why files in git instead of a database?** Any session that can clone the repo can read and update its memory, the history is auditable, and nothing extra has to be hosted.
+
+## Pro pack ($19 one-time)
+- 3 routine prompt templates: weekday light run, weekend heavy run, setup/test run
+- `weekly_report.py`: builds a short REPORT.md from LEDGER.csv, STATE.md and usage.json
+- `trim_state.py` and `lint_runlog.py`: keep STATE.md small and the run log consistent
+- `usage_gate.py` + `request_refresh.sh`: a local HEAVY/LIGHT/STOP/UNKNOWN gate with on-demand refresh
+- `SETUP-GUIDE.md`: cloud environment, network secrets, repo secret, operator-request batching, known gotchas
+
+[Buy the pro pack on Polar](https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV) (merchant of record; handles sales tax). Python 3.9+ standard library, bash, git.
 
 ## License
 MIT. See `LICENSE`. Provided as is, without warranty.
