@@ -1,0 +1,36 @@
+name: usage-check
+# Same as usage-check.yml, but uses the packaged action from this repo.
+# Copy to .github/workflows/ in your private memory repo.
+on:
+  schedule:
+    - cron: "5 2 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/usage-request"]
+permissions:
+  contents: write
+concurrency:
+  group: usage-check
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - id: usage
+        uses: plainfoldhq/agent-ops-kit@v1
+        with:
+          oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          output-file: usage.json
+          max-weekly-pct: "90"
+      - name: Commit usage.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add usage.json
+          git diff --cached --quiet && exit 0
+          git commit -m "usage check $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done
+          exit 1

@@ -23,6 +23,7 @@ Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "C
 | `templates/MISSION.md` | Hard-rules skeleton (law, privacy, honesty, platform terms, spending, operator contact) |
 | `templates/STATE.md`, `DECISIONS.md`, `LEDGER.csv` | Memory files: current state, decision log, transaction log |
 | `workflow/usage-check.yml` | GitHub Actions job (copy to `.github/workflows/` in your repo) that runs the official Claude Code CLI with a one-line Haiku prompt and commits `usage.json` |
+| `action.yml`, `scripts/action_outputs.py` | The same check as a reusable GitHub Action with outputs and optional thresholds |
 | `scripts/parse_usage.py` | Turns the CLI's `rate_limit_event` output into `usage.json` (rate-limit fields only) |
 
 ## Setup (5 steps)
@@ -31,6 +32,23 @@ Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "C
 3. On your machine run `claude setup-token`, then add the token as the repo secret `CLAUDE_CODE_OAUTH_TOKEN` (Settings → Secrets and variables → Actions). Never commit it.
 4. Edit the cron line(s) in `.github/workflows/usage-check.yml` to run 30-90 minutes before your agent runs (UTC). Run the workflow once by hand (Actions → usage-check → Run workflow) and check `usage.json`.
 5. Point your scheduled agent at the repo with a prompt like: "Clone <owner>/<repo>, read CLAUDE.md and follow it. Apply the usage gate first."
+
+## Use it as a GitHub Action
+The usage check is also packaged as a composite action (`action.yml` in this repo):
+
+```yaml
+- id: usage
+  uses: plainfoldhq/agent-ops-kit@v1
+  with:
+    oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+    output-file: usage.json      # default
+    max-weekly-pct: "90"         # optional: ok=false at/above this
+    max-five-hour-pct: "80"      # optional
+- if: steps.usage.outputs.ok != 'true'
+  run: echo "Over budget, skipping" && exit 0
+```
+
+Outputs: `five-hour-pct`, `weekly-pct`, `weekly-resets`, `status`, `ok`. It writes the file but does not commit it; see `workflow/usage-check-action-example.yml` for a full workflow that commits `usage.json`. Tested on GitHub-hosted `ubuntu-latest`.
 
 ## How the usage gate works
 - The workflow writes `usage.json`: `checked_at`, `five_hour_pct`, `weekly_pct`, `weekly_resets`, `status`, `error`.
