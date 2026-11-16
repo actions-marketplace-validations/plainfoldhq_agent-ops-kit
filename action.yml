@@ -1,0 +1,79 @@
+name: "Claude Code plan usage check"
+description: "Read your Claude plan's 5-hour and weekly usage with the official Claude Code CLI and write usage.json."
+author: "Plainfold"
+branding:
+  icon: "activity"
+  color: "gray-dark"
+
+inputs:
+  oauth-token:
+    description: "Token from `claude setup-token`. Pass it from a repo secret, e.g. secrets.CLAUDE_CODE_OAUTH_TOKEN."
+    required: true
+  output-file:
+    description: "Where to write the usage JSON."
+    required: false
+    default: "usage.json"
+  model:
+    description: "Model for the one-line check prompt (cheapest is best)."
+    required: false
+    default: "haiku"
+  cli-version:
+    description: "npm version of @anthropic-ai/claude-code to run."
+    required: false
+    default: "latest"
+  max-weekly-pct:
+    description: "If set, output ok=false when weekly usage is at or above this percent (or unknown)."
+    required: false
+    default: ""
+  max-five-hour-pct:
+    description: "If set, output ok=false when 5-hour usage is at or above this percent (or unknown)."
+    required: false
+    default: ""
+
+outputs:
+  five-hour-pct:
+    description: "5-hour window utilization, 0-100 (empty if unknown)."
+    value: ${{ steps.parse.outputs.five_hour_pct }}
+  weekly-pct:
+    description: "Weekly (seven-day) utilization, 0-100 (empty if unknown)."
+    value: ${{ steps.parse.outputs.weekly_pct }}
+  weekly-resets:
+    description: "ISO 8601 time the weekly window resets (empty if unknown)."
+    value: ${{ steps.parse.outputs.weekly_resets }}
+  status:
+    description: "Rate-limit status reported by the CLI, e.g. allowed."
+    value: ${{ steps.parse.outputs.status }}
+  ok:
+    description: "true unless a max-* threshold is reached or the needed number is unknown."
+    value: ${{ steps.parse.outputs.ok }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "22"
+
+    - name: Run one-line prompt with the official CLI
+      shell: bash
+      env:
+        CLAUDE_CODE_OAUTH_TOKEN: ${{ inputs.oauth-token }}
+        AOK_MODEL: ${{ inputs.model }}
+        AOK_CLI: ${{ inputs.cli-version }}
+      run: |
+        npx -y "@anthropic-ai/claude-code@${AOK_CLI}" -p "Reply with OK" \
+          --model "$AOK_MODEL" --max-turns 1 \
+          --output-format stream-json --verbose > "$RUNNER_TEMP/aok-out.jsonl" 2>/dev/null || true
+
+    - name: Parse rate-limit event
+      id: parse
+      shell: bash
+      env:
+        AOK_OUT: ${{ inputs.output-file }}
+        AOK_MAX_WEEKLY: ${{ inputs.max-weekly-pct }}
+        AOK_MAX_5H: ${{ inputs.max-five-hour-pct }}
+      run: |
+        python3 "$GITHUB_ACTION_PATH/scripts/parse_usage.py" "$RUNNER_TEMP/aok-out.jsonl" > "$AOK_OUT"
+        rm -f "$RUNNER_TEMP/aok-out.jsonl"
+        python3 "$GITHUB_ACTION_PATH/scripts/action_outputs.py" "$AOK_OUT" >> "$GITHUB_OUTPUT"
+        cat "$AOK_OUT"
