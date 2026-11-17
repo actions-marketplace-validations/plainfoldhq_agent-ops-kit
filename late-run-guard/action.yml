@@ -1,0 +1,42 @@
+name: "Late-run guard for scheduled workflows"
+description: "Tell how late a GitHub Actions scheduled (cron) run started, and skip work when it is too late."
+author: "Plainfold"
+branding:
+  icon: "clock"
+  color: "gray-dark"
+
+inputs:
+  cron:
+    description: "The cron expression this run was meant for. Default: the one that triggered the run (github.event.schedule)."
+    required: false
+    default: ""
+  max-late-minutes:
+    description: "ok=false when the run started more than this many minutes after its scheduled time."
+    required: false
+    default: "60"
+
+outputs:
+  scheduled-for:
+    description: "UTC time (ISO 8601) the run was scheduled for; empty if not a schedule event."
+    value: ${{ steps.guard.outputs.scheduled-for }}
+  late-minutes:
+    description: "Minutes between the scheduled time and now (0 if not a schedule event)."
+    value: ${{ steps.guard.outputs.late-minutes }}
+  is-scheduled:
+    description: "true if this run was triggered by schedule."
+    value: ${{ steps.guard.outputs.is-scheduled }}
+  ok:
+    description: "true unless this is a scheduled run later than max-late-minutes. Manual and push runs are always ok."
+    value: ${{ steps.guard.outputs.ok }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: guard
+      shell: bash
+      env:
+        LRG_CRON: ${{ inputs.cron != '' && inputs.cron || github.event.schedule }}
+        LRG_MAX: ${{ inputs.max-late-minutes }}
+        LRG_EVENT: ${{ github.event_name }}
+      run: |
+        python3 "$GITHUB_ACTION_PATH/../scripts/late_run.py" "$LRG_CRON" "" "$LRG_MAX" "$LRG_EVENT" | tee -a "$GITHUB_OUTPUT"

@@ -33,4 +33,15 @@ Tips:
 - Scheduled workflows run only on the default branch, and GitHub disables them in public repos after 60 days without repository activity.
 - Use `concurrency:` so a manual run and a push run don't commit over each other.
 
-This is exactly how the usage check in this kit is wired; see [checking Claude Code usage from GitHub Actions](check-claude-code-usage-in-github-actions.md).
+If a job only makes sense close to its time, skip late runs with the kit's late-run guard:
+
+```yaml
+- id: late
+  uses: plainfoldhq/agent-ops-kit/late-run-guard@v1
+  with:
+    max-late-minutes: "90"
+- if: steps.late.outputs.ok != 'true'
+  run: echo "Too late (${{ steps.late.outputs.late-minutes }} min), skipping" && exit 0
+```
+
+The usage check in this kit uses the same push-trigger pattern; see [checking Claude Code usage from GitHub Actions](check-claude-code-usage-in-github-actions.md).

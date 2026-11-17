@@ -30,6 +30,8 @@ Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "C
 | `workflow/usage-check.yml` | GitHub Actions job (copy to `.github/workflows/` in your repo) that runs the official Claude Code CLI with a one-line Haiku prompt and commits `usage.json` |
 | `action.yml`, `scripts/action_outputs.py` | The same check as a reusable GitHub Action with outputs and optional thresholds |
 | `scripts/parse_usage.py` | Turns the CLI's `rate_limit_event` output into `usage.json` (rate-limit fields only) |
+| `late-run-guard/action.yml`, `scripts/late_run.py` | Action that reports how late a scheduled run started (no token needed) |
+| `docs/` | Guides (usage check, schedule delays, file-based memory) |
 
 ## Setup (5 steps)
 1. Create a **private** repo for the agent's memory. Copy `templates/*` to its root, `scripts/` too, and `workflow/usage-check.yml` to `.github/workflows/usage-check.yml`.
@@ -54,6 +56,27 @@ The usage check is also packaged as a composite action (`action.yml` in this rep
 ```
 
 Outputs: `five-hour-pct`, `weekly-pct`, `weekly-resets`, `status`, `ok`. It writes the file but does not commit it; see `workflow/usage-check-action-example.yml` for a full workflow that commits `usage.json`. Tested on GitHub-hosted `ubuntu-latest`.
+
+## Late-run guard for scheduled workflows
+GitHub often starts `on: schedule` runs late (hours, at busy times). This second action tells you how late the current run is, so a job that only makes sense near its time can skip itself:
+
+```yaml
+on:
+  schedule:
+    - cron: "5 2 * * *"
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - id: late
+        uses: plainfoldhq/agent-ops-kit/late-run-guard@v1
+        with:
+          max-late-minutes: "90"
+      - if: steps.late.outputs.ok != 'true'
+        run: echo "Started ${{ steps.late.outputs.late-minutes }} min late, skipping" && exit 0
+```
+
+Outputs: `scheduled-for`, `late-minutes`, `is-scheduled`, `ok`. It reads the triggering cron from `github.event.schedule` (or the `cron` input), needs no token, and treats manual and push runs as on time. Standard-library Python, tested (`python3 -m unittest tests/test_late_run.py`). Background: [schedule delays guide](docs/github-actions-schedule-delays.md).
 
 ## How the usage gate works
 - The workflow writes `usage.json`: `checked_at`, `five_hour_pct`, `weekly_pct`, `weekly_resets`, `status`, `error`.
