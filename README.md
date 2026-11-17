@@ -16,6 +16,11 @@ Example `usage.json` written by the workflow:
 
 Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "Claude Code" are Anthropic's trademarks, used here only to describe what this works with.
 
+## Guides
+- [Check your Claude Code plan usage from GitHub Actions](docs/check-claude-code-usage-in-github-actions.md) (5-hour and weekly limits, on-demand refresh)
+- [GitHub Actions `schedule` runs late: how a scheduled agent copes](docs/github-actions-schedule-delays.md)
+- [Durable memory for scheduled Claude Code agents: plain files in git](docs/scheduled-agent-memory-in-git.md)
+
 ## What's in it
 | Path | Purpose |
 |---|---|
