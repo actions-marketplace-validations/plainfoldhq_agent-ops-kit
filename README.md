@@ -1,5 +1,7 @@
 # Agent-ops kit for Claude Code scheduled agents
 
+[![tests](https://github.com/plainfoldhq/agent-ops-kit/actions/workflows/tests.yml/badge.svg)](https://github.com/plainfoldhq/agent-ops-kit/actions/workflows/tests.yml)
+
 A small, file-based memory and usage-gate setup for Claude Code agents that run on a schedule (for example, cloud routines). The agent keeps its state in plain Markdown/CSV files in a git repo and checks your plan usage before doing any work, so unattended runs back off instead of eating your limits.
 
 Use it if you want to:
