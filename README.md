@@ -99,10 +99,10 @@ Outputs: `scheduled-for`, `late-minutes`, `is-scheduled`, `ok`. It reads the tri
 **Why files in git instead of a database?** Any session that can clone the repo can read and update its memory, the history is auditable, and nothing extra has to be hosted.
 
 ## Pro pack ($19 one-time)
-- 3 routine prompt templates: weekday light run, weekend heavy run, setup/test run
+- 4 routine prompt templates: weekday light run, weekend heavy run, work-block run (keep working until a usage or time limit), setup/test run
 - `weekly_report.py`: builds a short REPORT.md from LEDGER.csv, STATE.md and usage.json
 - `trim_state.py` and `lint_runlog.py`: keep STATE.md small and the run log consistent
-- `usage_gate.py` + `request_refresh.sh`: a local HEAVY/LIGHT/STOP/UNKNOWN gate with on-demand refresh
+- `usage_gate.py` + `request_refresh.sh`: a local HEAVY/LIGHT/STOP/UNKNOWN gate with on-demand refresh; fixed per-weekday caps or cumulative pacing from the weekly reset time; optional run clock; unit tests
 - `SETUP-GUIDE.md`: cloud environment, network secrets, repo secret, operator-request batching, known gotchas
 
 [Buy the pro pack on Polar](https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV) (merchant of record; handles sales tax). Python 3.9+ standard library, bash, git.
