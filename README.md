@@ -20,6 +20,7 @@ Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "C
 - [Check your Claude Code plan usage from GitHub Actions](docs/check-claude-code-usage-in-github-actions.md) (5-hour and weekly limits, on-demand refresh)
 - [GitHub Actions `schedule` runs late: how a scheduled agent copes](docs/github-actions-schedule-delays.md)
 - [Durable memory for scheduled Claude Code agents: plain files in git](docs/scheduled-agent-memory-in-git.md)
+- [Pace a scheduled agent across the weekly limit](docs/pace-claude-code-weekly-usage.md) (cumulative daily caps, the reset-day trap, check cadence)
 
 ## What's in it
 | Path | Purpose |
@@ -31,7 +32,7 @@ Made by Plainfold. Not affiliated with or endorsed by Anthropic. "Claude" and "C
 | `action.yml`, `scripts/action_outputs.py` | The same check as a reusable GitHub Action with outputs and optional thresholds |
 | `scripts/parse_usage.py` | Turns the CLI's `rate_limit_event` output into `usage.json` (rate-limit fields only) |
 | `late-run-guard/action.yml`, `scripts/late_run.py` | Action that reports how late a scheduled run started (no token needed) |
-| `docs/` | Guides (usage check, schedule delays, file-based memory) |
+| `docs/` | Guides (usage check, schedule delays, file-based memory, weekly pacing) |
 
 ## Setup (5 steps)
 1. Create a **private** repo for the agent's memory. Copy `templates/*` to its root, `scripts/` too, and `workflow/usage-check.yml` to `.github/workflows/usage-check.yml`.
@@ -106,6 +107,9 @@ Outputs: `scheduled-for`, `late-minutes`, `is-scheduled`, `ok`. It reads the tri
 - `SETUP-GUIDE.md`: cloud environment, network secrets, repo secret, operator-request batching, known gotchas
 
 [Buy the pro pack on Polar](https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV) (merchant of record; handles sales tax). Python 3.9+ standard library, bash, git.
+
+## Other Plainfold products
+Data packs for developers and analysts, sold on Polar: a [US federal, NYSE and Federal Reserve business-day calendar](https://buy.polar.sh/polar_cl_oW9ytw22HhxLxOnke3W8ibcgTXepc2hYuAEyl1gTqqB) (CSV, SQLite, ICS, 1971-2050) and a [date dimension + 4-5-4 / 4-4-5 retail calendar pack](https://buy.polar.sh/polar_cl_dQIvyRLcbGYoTfZgVmsIENITeo4Zu2zok8JI94KfqWn).
 
 ## License
 MIT. See `LICENSE`. Provided as is, without warranty.
