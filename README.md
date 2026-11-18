@@ -106,8 +106,9 @@ Outputs: `scheduled-for`, `late-minutes`, `is-scheduled`, `ok`. It reads the tri
 - 4 routine prompt templates: weekday light run, weekend heavy run, work-block run (keep working until a usage or time limit), setup/test run
 - `weekly_report.py`: builds a short REPORT.md from LEDGER.csv, STATE.md and usage.json
 - `trim_state.py` and `lint_runlog.py`: keep STATE.md small and the run log consistent
+- `preflight.py`: start-of-run check: each needed host reachable through the session proxy (tells an allowlist 403 apart from an HTTP error), clean tree, push access, fresh usage.json
 - `usage_gate.py` + `request_refresh.sh`: a local HEAVY/LIGHT/STOP/UNKNOWN gate with on-demand refresh; fixed per-weekday caps or cumulative pacing from the weekly reset time; optional run clock; unit tests
-- `SETUP-GUIDE.md`: cloud environment, network secrets, repo secret, operator-request batching, known gotchas
+- `SETUP-GUIDE.md`: cloud environment, network secrets, repo secret, operator-request batching, known gotchas (proxy 403s, unanswered prompts, repo and tag limits)
 
 [Buy the pro pack on Polar](https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV) (merchant of record; handles sales tax). Python 3.9+ standard library, bash, git.
 
