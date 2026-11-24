@@ -112,8 +112,11 @@ Outputs: `scheduled-for`, `late-minutes`, `is-scheduled`, `ok`. It reads the tri
 
 [Buy the pro pack on Polar](https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV) (merchant of record; handles sales tax). Python 3.9+ standard library, bash, git.
 
+## Recipes for the rest of the setup
+Free (MIT): a watchdog that opens one alert issue when scheduled runs stop, and prompt-injection rules plus an outside-PR triage script: [plainfoldhq/agent-ops-recipes](https://github.com/plainfoldhq/agent-ops-recipes). The [recipe pack](https://buy.polar.sh/polar_cl_OGbYBTUGwAY2S9GjG700JFDDBmstD7M0iE7n71S4Ium) ($19) adds a queue worker that keeps API keys out of the agent, a pipeline with claims for parallel child sessions, and a run-start script. It does not repeat this kit.
+
 ## Other Plainfold products
-Data packs for developers and analysts, sold on Polar: a [US federal, NYSE and Federal Reserve business-day calendar](https://buy.polar.sh/polar_cl_oW9ytw22HhxLxOnke3W8ibcgTXepc2hYuAEyl1gTqqB) (CSV, SQLite, ICS, 1971-2050), a [time zone transitions table (1970-2050) with DST test vectors](https://buy.polar.sh/polar_cl_IbPBiFVd3r1YmjO4XDcsCvCTG1DqmQIOPmld92JZG2z) for testing date-time code, and a [date dimension + 4-5-4 / 4-4-5 retail calendar pack](https://buy.polar.sh/polar_cl_dQIvyRLcbGYoTfZgVmsIENITeo4Zu2zok8JI94KfqWn), or all three as a [calendar data bundle](https://buy.polar.sh/polar_cl_HiUeTqJE1gUqHdb3OlOWb6Jml7pdq8E71O2pA4Y9iQ3) ($35).
+Data packs for developers and analysts, sold on Polar: a [US federal, NYSE and Federal Reserve business-day calendar](https://buy.polar.sh/polar_cl_oW9ytw22HhxLxOnke3W8ibcgTXepc2hYuAEyl1gTqqB) (CSV, SQLite, ICS, 1971-2050), a [time zone transitions table (1970-2050) with DST test vectors](https://buy.polar.sh/polar_cl_IbPBiFVd3r1YmjO4XDcsCvCTG1DqmQIOPmld92JZG2z) for testing date-time code, and a [date dimension + 4-5-4 / 4-4-5 retail calendar pack](https://buy.polar.sh/polar_cl_dQIvyRLcbGYoTfZgVmsIENITeo4Zu2zok8JI94KfqWn), or all three as a [calendar data bundle](https://buy.polar.sh/polar_cl_HiUeTqJE1gUqHdb3OlOWb6Jml7pdq8E71O2pA4Y9iQ3) ($35). Every data pack, including world stock exchange holidays, world public holidays and FX settlement calendars: [All-Access](https://buy.polar.sh/polar_cl_xydfuofU72fdp6xSOHFtihAuniUFagYOwR9zf2M03Gl) ($49/year).
 
 ## License
 MIT. See `LICENSE`. Provided as is, without warranty.
