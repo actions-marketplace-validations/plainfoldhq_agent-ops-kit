@@ -47,6 +47,6 @@ Never commit tokens. Put API keys in the environment's network secrets (the prox
 - [ ] Commit and push after each piece of work.
 - [ ] Human-only steps go into one batched request file, not into chat.
 
-The free kit in this repo has the memory templates, the usage-check workflow and action, and the late-run guard. The [pro pack](https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV) ($19) adds routine prompt templates, a local usage gate with weekly pacing, report scripts and a longer setup guide.
+The free kit in this repo has the memory templates, the usage-check workflow and action, and the late-run guard. The [pro pack](https://buy.polar.sh/polar_cl_HkC1kUZmcpRbovskrQSPqrWmpFi8Gqbau5vEI3HOoVV?utm_source=github&utm_medium=readme&utm_campaign=A&utm_content=agent-ops-kit) ($19) adds routine prompt templates, a local usage gate with weekly pacing, report scripts and a longer setup guide.
 
 Made by Plainfold. Not affiliated with or endorsed by Anthropic. Written with AI assistance.
